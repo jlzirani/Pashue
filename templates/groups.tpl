@@ -33,7 +33,7 @@ tr th:nth-child(2){
       </tr>
     </thead>
     <tbody>
-    {% for id, group in groups.items() %}
+    {% for id, group in result.items() %}
       <tr>
         <th>{{ group['lights']|length }}</th>
         <th> {%- if group['type'] == "Room" -%}
@@ -68,7 +68,7 @@ tr th:nth-child(2){
 <script>
 $( document ).ready(function()
 {
-  {% for id in groups %}
+  {% for id in result %}
   $('#uSetOffBtn-{{ id }}').on('click', function(e) {
      $.ajax({
         type: "PUT",

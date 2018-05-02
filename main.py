@@ -20,15 +20,12 @@ def dashboard():
   return render_template('dashboard.tpl', conf=conf, 
                          lights=lights)
 
-@app.route("/groups")
-def groups():
-  groups = backapi.ApiObject(config, "groups")
-  return render_template('groups.tpl', groups=groups.get())
-
-@app.route("/schedules")
-def schedules():
-  schedules = backapi.ApiObject(config, "schedules")
-  return render_template('schedules.tpl', schedules=schedules.get())
+@app.route("/<page>")
+def generic(page):
+  if page not in ["groups", "schedules", "scenes"]:
+    abort(404)
+  result = backapi.ApiObject(config, page).get()
+  return render_template( page+".tpl", result=result)
 
 @app.route("/scenes")
 def scenes():
@@ -81,7 +78,7 @@ def proxyPostPut(url=""):
 @app.route("/api/<user>/", methods=['GET'])
 @app.route("/api/<user>/<path:url>", methods=['GET', 'DELETE'])
 def Apiproxy(user="", url=""):
-    if not config.get("redirect", False):
+    if not config.get("proxy", False):
        abort(404)
     obj = backapi.ProxyApiObject(config, user, url)
     return json.dumps( obj.get() if request.method == 'GET' else obj.delete() )
@@ -92,7 +89,7 @@ def Apiproxy(user="", url=""):
 @app.route("/api/<user>/", methods=['POST', 'PUT'])
 @app.route("/api/<user>/<path:url>", methods=['POST', 'PUT'])
 def ApiProxyPostPut(user="", url=""):
-    if not config.get("redirect", False):
+    if not config.get("proxy", False):
        abort(404)
     body =  request.get_json(force=True) 
     obj = backapi.ProxyApiObject(config, user,  url)

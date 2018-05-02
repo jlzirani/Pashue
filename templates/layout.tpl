@@ -115,7 +115,7 @@ table tbody tr th {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_groups }}" href="{{ url_for('groups') }}">
+                <a class="nav-link {{ active_groups }}" href="{{ url_for('generic', page="groups") }}">
                   <i class="fas fa-object-group"></i>
                   <span class="text">groups</span>
                 </a>
@@ -127,7 +127,7 @@ table tbody tr th {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_schedules }}" href="{{ url_for('schedules') }}">
+                <a class="nav-link {{ active_schedules }}" href="{{ url_for('generic', page="schedules") }}">
                   <i class="fas fa-clock"></i>
                   <span class="text">schedules</span>
                 </a>
