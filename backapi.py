@@ -21,9 +21,7 @@ class ApiObject:
 
   def get(self):
     r = requests.get( self.buildBaseUrl() )
-    if r.status_code == 200 :
-      self.result = r.json() 
-    return self.result
+    return r.json()
 
   def put(self, data):
     r = requests.put( self.buildBaseUrl(), json.dumps(data))
@@ -44,10 +42,10 @@ class ProxyApiObject(ApiObject):
 
   def get(self):
     result = ApiObject.get(self)
-    if self.path == "/" or self.path == "":
+    if "error" not in result[0] and ( self.path == "/" or self.path == "" ):
       result['config']['name'] = "Proxy " + result['config']['name']
       result['config']['ipaddress'] = self.config.get("ip", "192.168.0.235")
-    if self.path == "config" or self.path == "config/":
+    if "error" not in result[0] and (self.path == "config" or self.path == "config/"):
       result['name'] = "Proxy " + result['name']
       result['ipaddress'] = self.config.get("ip", "192.168.0.235")
     return result
