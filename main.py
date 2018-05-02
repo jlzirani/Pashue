@@ -57,8 +57,22 @@ def proxyPostPut(url=""):
 def Apiproxy(user="", url=""):
     if not config.get("proxy", False):
        abort(404)
-    obj = backapi.ProxyApiObject(config, user, url)
-    return json.dumps( obj.get() if request.method == 'GET' else obj.delete() )
+    proxyApi = backapi.restApi(config['hue-ip'], user)
+    result = {}
+    
+    if request.method == 'GET' :
+      result = proxyApi.get( url )
+      if type(result) is dict:
+        if url == "/" or url == "":
+          result['config']['name'] = "Proxy " + result['config']['name']
+          result['config']['ipaddress'] = config.get("ip", "192.168.0.235")
+        if url == "config" or url == "config/":
+          result['name'] = "Proxy " + result['name']
+          result['ipaddress'] = config.get("ip", "192.168.0.235")
+    else:
+      result = proxyApi.delete( url )
+
+    return json.dumps( result )
     
 @app.route("/api", methods=['POST'])
 @app.route("/api/", methods=['POST'])
@@ -68,9 +82,9 @@ def Apiproxy(user="", url=""):
 def ApiProxyPostPut(user="", url=""):
     if not config.get("proxy", False):
        abort(404)
+    proxyApi = backapi.restApi(config['hue-ip'], user)
     body =  request.get_json(force=True) 
-    obj = backapi.ProxyApiObject(config, user,  url)
-    return json.dumps( obj.post(body) if request.method == 'POST' else obj.put(body) )
+    return json.dumps( proxyApi.post(url,body) if request.method == 'POST' else proxyApi.put(url, body) )
 
 if __name__ == '__main__':
   config = json.load(open('config.json'))
