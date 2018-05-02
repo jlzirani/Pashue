@@ -133,7 +133,7 @@ table tbody tr th {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_scenes }}" href="{{ url_for('scenes') }}">
+                <a class="nav-link {{ active_scenes }}" href="{{ url_for('generic', page="scenes") }}">
                 <i class="fas fa-bullhorn"></i>
                 <span class="text">scenes</span>
                 </a>

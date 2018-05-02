@@ -27,11 +27,6 @@ def generic(page):
   result = backapi.ApiObject(config, page).get()
   return render_template( page+".tpl", result=result)
 
-@app.route("/scenes")
-def scenes():
-  scenes = backapi.ApiObject(config, "scenes")
-  return render_template('scenes.tpl', scenes=scenes.get())
-
 @app.route("/lights")
 def lights():
   lights = backapi.ApiObject(config, "lights")

@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for id, schedule in schedules.items() %}
+      {% for id, schedule in result.items() %}
       <tr>
 	<th>{{ schedule['type'] }} </th>
         <th>{{ schedule['name'] }} </th>
