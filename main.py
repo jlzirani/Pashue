@@ -20,32 +20,15 @@ def dashboard():
   return render_template('dashboard.tpl', conf=conf, 
                          lights=lights)
 
-@app.route("/<page>")
+@app.route("/<any(groups, schedules, scenes, lights, sensors, rules):page>")
 def generic(page):
-  if page not in ["groups", "schedules", "scenes"]:
-    abort(404)
   result = backapi.ApiObject(config, page).get()
   return render_template( page+".tpl", result=result)
-
-@app.route("/lights")
-def lights():
-  lights = backapi.ApiObject(config, "lights")
-  return render_template('lights.tpl', lights = lights.get())
 
 @app.route("/light/<id>")
 def light(id):
   light = backapi.ApiObject(config, "lights/"+id)
   return render_template('light.tpl', light=light.get(), id=id)
-
-@app.route("/sensors")
-def sensors():
-  sensors = backapi.ApiObject(config, "sensors")
-  return render_template('sensors.tpl', sensors = sensors.get())
-
-@app.route("/rules")
-def rules():
-  rules = backapi.ApiObject(config, "rules")
-  return render_template('rules.tpl', rules=rules.get())
 
 @app.route("/rule/<id>")
 def rule(id):

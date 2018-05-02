@@ -11,10 +11,10 @@
   </span>
   <div class="media-body">
     <ul style="list-style-type: none">
-      <li> {{ lights|length }} ligth(s) known by the bridge. </li>
-      <li> {{ lights.values()|selectattr("state.on")|list|length }} light(s) turned on.</li>
+      <li> {{ result|length }} ligth(s) known by the bridge. </li>
+      <li> {{ result.values()|selectattr("state.on")|list|length }} light(s) turned on.</li>
       <li> 
-        {{ lights.values()|selectattr("state.reachable")|list|length }} light(s) are reachable.
+        {{ result.values()|selectattr("state.reachable")|list|length }} light(s) are reachable.
       </li>
       <li> 
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -41,7 +41,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for id, light in lights.items() %}
+      {% for id, light in result.items() %}
       <tr>
 	<th>{{ light['type'] }} </th>
         <th>{{ light['name'] }} </th>
@@ -91,7 +91,7 @@ $( document ).ready(function()
       });
   });
 
-  {% for id in lights %}
+  {% for id in result %}
   $('#uSetOffBtn-{{ id }}').on('click', function(e) {
      $.ajax({
         type: "PUT",

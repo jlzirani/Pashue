@@ -103,13 +103,13 @@ table tbody tr th {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_lights }}" href="{{ url_for('lights') }}">
+                <a class="nav-link {{ active_lights }}" href="{{ url_for("generic", page='lights') }}">
 		  <i class="fas fa-lightbulb"></i>
                   <span class="text">lights</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_sensors }}" href="{{ url_for('sensors') }}">
+                <a class="nav-link {{ active_sensors }}" href="{{ url_for("generic", page='sensors') }}">
                   <i class="fas fa-question"></i>
                   <span class="text">sensors</span>
                 </a>
@@ -121,7 +121,7 @@ table tbody tr th {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_rules }}" href="{{ url_for('rules') }}">
+                <a class="nav-link {{ active_rules }}" href="{{ url_for('generic', page="rules") }}">
                   <i class="fas fa-list-ol"></i>
                   <span class="text">rules</span>
                 </a>
