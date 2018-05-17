@@ -6,7 +6,7 @@
 
 
 <div class="container">
-  <form action="/test" method="post">
+  <form action="{{ url_for("addGroupPost") }}" method="post">
     <div class="form-group">
       <label for="name">Name group</label>
       <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter a name group">
@@ -46,9 +46,8 @@
     </div>
     {% endfor %}
   </div>
-  <button type="submit" class="btn btn-default">Create</button>
-  <!-- <button type="submit" class="btn btn-default" name="create" value="new">Create and add an other new group</button> -->
-
+  <button type="submit" class="btn btn-default" name="return" value="groupPage">Create</button>
+  <button type="submit" class="btn btn-default" name="return" value="newGroup">Create and add an other new group</button> 
 </form>
 </div>
 
