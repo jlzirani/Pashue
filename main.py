@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import json, backapi
-from flask import Flask, request, abort, render_template
+from flask import Flask, request, abort, render_template, redirect, url_for
 
 app = Flask(__name__, static_url_path="/static")
 config = {}
@@ -26,10 +26,45 @@ def generic(page):
   result = restApi.get(page) 
   return render_template( page+".tpl", result=result)
 
+@app.route("/add/group", methods=['GET'])
+def addGroup():
+  lights = restApi.get("lights")
+  return render_template( "add_group.tpl", lights=lights )
+
+@app.route("/add/group", methods=['POST'])
+def addGroupPost():
+   data = request.form
+
+   query = { "lights": data.getlist('lights'),
+             "name": data['name'],
+             "type": data['type']}
+
+   if query['type'] in [ 'Living room', 'Kitchen', 'Dining', 'Bedroom', 'Kids bedroom', 
+                         'Bathroom', 'Nursery', 'Recreation', 'Office', 'Gym', 'Hallway', 
+                         'Toilet', 'Front door', 'Garage', 'Terrace', 'Garden', 
+                         'Driveway', 'Carport', 'Other']:
+     query['class'] = query['type']
+     query['type'] = "Room"
+
+   result = restApi.post("groups", query)
+
+   if "success" in result[0]:
+     if data['return'] == "groupPage":
+       return redirect( url_for("group", id = result[0]["success"]["id"]) )
+     if data['return'] == "newGroup":
+       return redirect( url_for("addGroup") )
+
+   return json.dumps(query)
+
 @app.route("/light/<id>")
 def light(id):
   light = restApi.get("lights/"+id)
   return render_template('light.tpl', light=light, id=id)
+
+@app.route("/group/<id>")
+def group(id):
+  group = restApi.get("groups/"+id)
+  return render_template('group.tpl', group=group, id=id)
 
 @app.route("/rule/<id>")
 def rule(id):
