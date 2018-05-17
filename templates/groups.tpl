@@ -62,6 +62,13 @@ tr th:nth-child(2){
   </table>
 </div>
 
+<div>
+  <ul style="list-style-type: none">
+    <li><a href="{{ url_for("addGroup") }}"><i class="fas fa-plus"></i>Add a new group</a></li>
+  </ul>
+</div>
+
+
 {% endblock %}
 {% block js %}
 
