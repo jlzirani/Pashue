@@ -18,10 +18,10 @@
       </li>
       <li> 
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <label id="uSetAllOnBtn" class="btn btn-secondary btn-sm">
+          <label data-action="on" class="btn btn-secondary btn-sm uSetAllBtn">
             <input type="radio" name="options" id="option1" autocomplete="off" > On 
           </label>
-          <label id="uSetAllOffBtn" class="btn btn-secondary btn-sm">
+          <label data-action="off" class="btn btn-secondary btn-sm uSetAllBtn">
             <input type="radio" name="options" id="option3" autocomplete="off"> Off
           </label>
        </li>
@@ -51,13 +51,13 @@
           <i class="fas fa-edit"></i>
           <i class="fas fa-trash"></i>
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label id="uSetOnBtn-{{id}}" class="btn btn-secondary btn-sm 
-		{%- if light['state']['on'] %} active{% endif -%}">
+            <label data-id="{{id}}" data-action="on" class="btn btn-secondary btn-sm  
+		{%- if light['state']['on'] %} active{% endif %} uSetBtn">
               <input type="radio" name="options" id="option1" autocomplete="off"  
 		{%- if light['state']['on'] %} checked {% endif -%}> On 
             </label>
-            <label id="uSetOffBtn-{{id}}" class="btn btn-secondary btn-sm
-		{%- if not light['state']['on'] %} active{% endif -%}">
+            <label data-id="{{id}}" data-action="off" class="btn btn-secondary btn-sm
+		{%- if not light['state']['on'] %} active {% endif %} uSetBtn">
               <input type="radio" name="options" id="option3" autocomplete="off"
 		{%- if not light['state']['on'] %} checked {% endif -%}> Off
             </label>
@@ -74,41 +74,25 @@
 <script>
 $( document ).ready(function()
 {
-  $('#uSetAllOffBtn').on('click', function(e) {
+  $('.uSetAllBtn').on('click', function(e) {
      $.ajax({
         type: "PUT",
         url:"/redirect/groups/0/action",
         contentType: "application/json",
-        data: JSON.stringify({"on": false})
-      });
-  });
-  $('#uSetAllOnBtn').on('click', function(e) {
-     $.ajax({
-        type: "PUT",
-        url:"/redirect/groups/0/action",
-        contentType: "application/json",
-        data: JSON.stringify({"on": true})
+        data: JSON.stringify({"on": $(this).data('action') == "on"})
       });
   });
 
-  {% for id in result %}
-  $('#uSetOffBtn-{{ id }}').on('click', function(e) {
+
+  $('.uSetBtn').on('click', function(e) {
      $.ajax({
         type: "PUT",
-        url:"/redirect/lights/{{ id }}/state",
+        url:"/redirect/lights/"+$(this).data('id')+"/state",
         contentType: "application/json",
-        data: JSON.stringify({"on": false})
+        data: JSON.stringify({"on": $(this).data('action') == "on"})
       });
   });
-  $('#uSetOnBtn-{{ id }}').on('click', function(e) {
-     $.ajax({
-        type: "PUT",
-        url:"/redirect/lights/{{ id }}/state",
-        contentType: "application/json",
-        data: JSON.stringify({"on": true})
-      });
-  });
-  {% endfor %}
+
 });
 
 </script>
