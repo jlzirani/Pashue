@@ -17,10 +17,10 @@ After that, you can generate _config.json_ using setup.py (in the ve if necessar
 ### Dependencies :
 
 As said previously, there is two python dependencies: _flask_ and _requests_.
-Although, the html/css fronted use _bootstrap_, _jquery_, _fontawesome_ and _bootstrap-colorpicker_.
+Although, the html/css fronted use _angular.js_, _bootstrap_, _jquery_, _fontawesome_ and _bootstrap-colorpicker_.
 Those dependencies are statically present under the static directory:
 * static/bs: bootstrap
-* static/js/jquery.js: jquery
+* static/js/lib//jquery.js: jquery
 * static/bs-colorpicjer: bootstrap-colorpicker
 * static/fa: font awesome
 
@@ -43,6 +43,6 @@ The file _config.json_ is the configuration file and contains:
 ## License:
 This project is under the GPL license.
 
-Bootstrap, bootstrap-colorpicker and jquery: MIT license.
+Angular.js, Bootstrap, bootstrap-colorpicker and jquery: MIT license.
 Font awesome (free): Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License.
 
