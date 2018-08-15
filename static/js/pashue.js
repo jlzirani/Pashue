@@ -109,6 +109,11 @@ pashueModule.controller('lights', function($scope, $rootScope, $http, $log) {
 				.then(function(response) {});
 			
 		}
+		
+		$scope.setOnOffFn = function(action) {
+			$http.put(link+"/state", JSON.stringify({"on": action}))
+				.then(function(response) {});
+		};
 				
 		$http.get(link)
 			.then(function(response) {
