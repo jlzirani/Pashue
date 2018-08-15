@@ -4,18 +4,16 @@
   </span>
   <div class="media-body">
     <ul style="list-style-type: none">
-      <li> {{ info.length }} ligth(s) known by the bridge. </li>
-      <li> {{ info.on }} light(s) turned on.</li>
+      <li> {{ lights | objLength  }} ligth(s) known by the bridge. </li>
+      <li> {{ lights | getStateLamp:"on" | objLength }} light(s) turned on.</li>
+      <li> {{ lights | getStateLamp:"reachable" | objLength }} light(s) are reachable. </li>
       <li> 
-        {{ info.reachable }} light(s) are reachable.
-      </li>
-      <li> 
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <div class="btn-group btn-group-toggle">
           <label id="uSetAllOnBtn" class="btn btn-secondary btn-sm">
-            <input type="radio" name="options" id="option1" autocomplete="off" > On 
+            <input type="radio" name="options" id="option1" autocomplete="off" ng-click="setAllFn( true )" > On 
           </label>
           <label id="uSetAllOffBtn" class="btn btn-secondary btn-sm">
-            <input type="radio" name="options" id="option3" autocomplete="off"> Off
+            <input type="radio" name="options" id="option3" autocomplete="off" ng-click="setAllFn( false )"> Off
           </label>
        </li>
     <ul>
@@ -42,18 +40,22 @@
           <a href="#!light/{{ id }}"><i class="fas fa-wrench"></i></a>
           <i class="fas fa-edit"></i>
           <i class="fas fa-trash"></i>
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label id="uSetOnBtn-{{ id }}" class="btn btn-secondary btn-sm">
-              <input type="radio" name="options" id="option1" autocomplete="off" > On 
+          
+          <div class="btn-group btn-group-toggle">
+            <label class="btn btn-secondary btn-sm">
+              <input type="radio" autocomplete="off" name="set-{{ id }}" id="{{ id }}-On"  ng-model="light.state.on" ng-change="setFn( id, true)" ng-value="true" checked="checked"> On 
             </label>
-            <label id="uSetOffBtn-{{ id }}" class="btn btn-secondary btn-sm">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Off
+            <label class="btn btn-secondary btn-sm">
+              <input type="radio" autocomplete="off" name="set-{{ id }}" id="{{ id }}-Off" ng-model="light.state.on" ng-change="setFn( id, false )" ng-value="false"> Off
             </label>
           </div>
+          
         </th>
       </tr>
 
     </tbody>
   </table>
+
 </div>
+
 
