@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row summary">
+    <div class="col border rounded">
+      <h3 class="text-center"> Hue Bridge </h3>
+      <table class="table table-sm">
+        <tr><th> name </th><th> {{ config.name }}</th></tr>
+        <tr><th> ip address </th><th> {{ config.ipaddress }}</th></tr>
+        <tr><th> zigbee channel </th><th> {{ config.zigbeechannel }}</th></tr>
+        <tr><th> api version </th><th> {{ config.apiversion }} </th></tr>
+        <tr><th> portal service</th><th> {{ config.portalservices }} </th></tr>
+      </table>
+    </div>
+    <div class="col border rounded">
+      <h3 class="text-center"> Lights summary </h3>
+       <table class="table table-sm">
+        <tr><th> Total </th><th> {{ lights.length }}</th></tr>
+        <tr><th> Number on </th><th> 
+          {{ lights.on }}
+        </th></tr>
+        <tr><th> Number reachable </th><th> 
+          {{ lights.reachable}}
+        </th></tr>
+      </table>
+
+    </div>
+  </div>
+</div>

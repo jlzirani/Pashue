@@ -1,0 +1,17 @@
+
+	<div class="container-fluid" >
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item " ng-repeat="elem in $ctrl.menu">
+                <a class="nav-link {{ elem.active }}" href="#!{{ elem.name }}">
+                  <i class="{{ elem.icon }}"></i>
+                  <span class="text">{{ elem.name }}</span>
+                </a>
+              </li>
+             </ul>
+          </div>
+        </nav>
+      </div>
+    </div>

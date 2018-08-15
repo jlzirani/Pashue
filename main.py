@@ -9,16 +9,17 @@ config = {}
 def favicon():
   return app.send_static_file('favicon.ico')
 
-@app.route("/dashboard")
 @app.route("/")
 def dashboard():
-  conf = backapi.ApiObject(config, "config").get()
-  lights = backapi.ApiObject(config, "lights").get()
-  #sensors = backapi.ApiObject(config, "sensors")
-  #rules = backapi.ApiObject(config, "rules")
+  return app.send_static_file('index.html')
 
-  return render_template('dashboard.tpl', conf=conf, 
-                         lights=lights)
+#  conf = backapi.ApiObject(config, "config").get()
+#  lights = backapi.ApiObject(config, "lights").get()
+#  sensors = backapi.ApiObject(config, "sensors")
+#  rules = backapi.ApiObject(config, "rules")
+
+#  return render_template('dashboard.tpl', conf=conf, 
+#                         lights=lights)
 
 @app.route("/groups")
 def groups():

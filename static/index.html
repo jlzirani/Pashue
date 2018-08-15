@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/static/bs/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fa/css/fontawesome-all.css">
+
+	<!-- css -->
+    <link rel="stylesheet" href="/static/css/pashue.css">
+
+
+	<!-- Javascript lib -->
+	
+    <script src="/static/js/lib/jquery.js"></script>
+    <script src="/static/js/lib/popper.min.js"></script>
+    <script src="/static/bs/js/bootstrap.min.js"></script>
+    <script src="/static/js/lib/angular/angular.min.js"></script>
+    <script src="/static/js/lib/angular/angular-route.min.js"></script>
+    
+    
+	<!-- Angular ctrl -->
+	<script>
+	var hue = { 
+		ip: '192.168.4.1',
+		user: '' }	
+	</script>
+	
+	<script src="/static/js/pashue.js"></script>
+
+
+	
+    <title>Pashue</title>
+  </head>
+  <body ng-app="pashue" ng-Controller="pashue">
+
+
+
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="">Pashue</a>
+      <ul class="navbar-nav px-3">
+      </ul>
+    </nav>
+
+
+	<div class="container-fluid" >
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item " ng-repeat="elem in $menu" >
+                <a class="nav-link active" ng-if="$active == elem.name" href="#!{{ elem.name }}">
+                  <i class="{{ elem.icon }}"></i>
+                  <span class="text">{{ elem.name }}</span>
+                </a>
+                             
+               <a class="nav-link" ng-if="$active != elem.name" href="#!{{ elem.name }}">
+                  <i class="{{ elem.icon }}"></i>
+                  <span class="text">{{ elem.name }}</span>
+                </a>
+                                
+              </li>
+             </ul>
+          </div>
+        </nav>
+      </div>
+
+    </div>
+
+<!--
+
+    <div class="container-fluid" >
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item ">
+                <a class="nav-link {{ $active.dashboard }}" href="#!dashboard">
+                  <i class="fas fa-home"></i>
+                  <span class="text">dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{ $active.lights }}" href="#!lights">
+				  <i class="fas fa-lightbulb"></i>
+                  <span class="text">lights</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">
+                  <i class="fas fa-question"></i>
+                  <span class="text">sensors</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">
+                  <i class="fas fa-object-group"></i>
+                  <span class="text">groups</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">
+                  <i class="fas fa-list-ol"></i>
+                  <span class="text">rules</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">
+                  <i class="fas fa-clock"></i>
+                  <span class="text">schedules</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">
+                <i class="fas fa-bullhorn"></i>
+                <span class="text">scenes</span>
+                </a>
+              </li>
+             </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+    
+    -->
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" ng-view>
+    </main>
+
+
+  </body>
+</html>
