@@ -21,24 +21,15 @@
   </div>
 </div>
 
-<div class="btn-group btn-group-toggle" data-toggle="buttons" ng-if="light.state.on">
-<label id="uSetOnBtn" class="btn btn-secondary btn-sm active">
-  <input type="radio" name="option1" autocomplete="off" checked> On 
+<div class="btn-group btn-group-toggle">
+<label id="uSetOnBtn" class="btn btn-secondary btn-sm">
+  <input type="radio" name="setOnOff" autocomplete="off" ng-model="light.state.on" ng-change="setOnOffFn(true)" ng-value="true" > On 
 </label>
 <label id="uSetOffBtn" class="btn btn-secondary btn-sm">
-  <input type="radio" name="option2" autocomplete="off"> Off
+  <input type="radio" name="sefOnOff" autocomplete="off" ng-model="light.state.on" ng-change="setOnOffFn(false)" ng-value="false"> Off
 </label>
 </div>
 
-
-<div class="btn-group btn-group-toggle" data-toggle="buttons" ng-if="!light.state.on">
-<label id="uSetOnBtn" class="btn btn-secondary btn-sm">
-  <input type="radio" name="option1" autocomplete="off"> On 
-</label>
-<label id="uSetOffBtn" class="btn btn-secondary btn-sm active">
-  <input type="radio" name="option2" autocomplete="off" checked> Off
-</label>
-</div>
 
 <div class="slidecontainer" ng-if="light.state.bri">
   <input type="range" min="1" max="254" ng-value="light.state.bri" class="slider" ng-model="light.state.bri" ng-change="setBri()">
