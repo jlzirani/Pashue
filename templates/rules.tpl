@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for id, rule in rules.items() %}
+      {% for id, rule in result.items() %}
       <tr>
         <th>{{ rule['name'] }} </th>
         <th>{{ rule['conditions']|length }} </th>

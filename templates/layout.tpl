@@ -103,37 +103,37 @@ table tbody tr th {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_lights }}" href="{{ url_for('lights') }}">
+                <a class="nav-link {{ active_lights }}" href="{{ url_for("generic", page='lights') }}">
 		  <i class="fas fa-lightbulb"></i>
                   <span class="text">lights</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_sensors }}" href="{{ url_for('sensors') }}">
+                <a class="nav-link {{ active_sensors }}" href="{{ url_for("generic", page='sensors') }}">
                   <i class="fas fa-question"></i>
                   <span class="text">sensors</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_groups }}" href="{{ url_for('groups') }}">
+                <a class="nav-link {{ active_groups }}" href="{{ url_for('generic', page="groups") }}">
                   <i class="fas fa-object-group"></i>
                   <span class="text">groups</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_rules }}" href="{{ url_for('rules') }}">
+                <a class="nav-link {{ active_rules }}" href="{{ url_for('generic', page="rules") }}">
                   <i class="fas fa-list-ol"></i>
                   <span class="text">rules</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_schedules }}" href="{{ url_for('schedules') }}">
+                <a class="nav-link {{ active_schedules }}" href="{{ url_for('generic', page="schedules") }}">
                   <i class="fas fa-clock"></i>
                   <span class="text">schedules</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{ active_scenes }}" href="{{ url_for('scenes') }}">
+                <a class="nav-link {{ active_scenes }}" href="{{ url_for('generic', page="scenes") }}">
                 <i class="fas fa-bullhorn"></i>
                 <span class="text">scenes</span>
                 </a>

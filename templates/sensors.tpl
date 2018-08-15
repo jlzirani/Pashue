@@ -20,7 +20,7 @@
         <th>Actions</th>
       </tr>
     </thead>
-      {% for id, sensor in sensors.items() %}
+      {% for id, sensor in result.items() %}
       <tr>
 	<th>{{ sensor['type'] }} </th>
         <th>{{ sensor['name'] }} </th>

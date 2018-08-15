@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import json, backapi
-from flask import Flask, request, abort, render_template
+from flask import Flask, request, abort, render_template, redirect, url_for
 
 app = Flask(__name__, static_url_path="/static")
 config = {}
+restApi = None
 
 @app.route("/favicon.ico")
 def favicon():
@@ -12,7 +13,6 @@ def favicon():
 @app.route("/")
 def dashboard():
   return app.send_static_file('index.html')
-
 #  conf = backapi.ApiObject(config, "config").get()
 #  lights = backapi.ApiObject(config, "lights").get()
 #  sensors = backapi.ApiObject(config, "sensors")
@@ -21,71 +21,93 @@ def dashboard():
 #  return render_template('dashboard.tpl', conf=conf, 
 #                         lights=lights)
 
-@app.route("/groups")
-def groups():
-  groups = backapi.ApiObject(config, "groups")
-  return render_template('groups.tpl', groups=groups.get())
+@app.route("/<any(groups, schedules, scenes, lights, sensors, rules):page>")
+def generic(page):
+  result = restApi.get(page) 
+  return render_template( page+".tpl", result=result)
 
-@app.route("/schedules")
-def schedules():
-  schedules = backapi.ApiObject(config, "schedules")
-  return render_template('schedules.tpl', schedules=schedules.get())
+@app.route("/add/group", methods=['GET'])
+def addGroup():
+  lights = restApi.get("lights")
+  return render_template( "add_group.tpl", lights=lights )
 
-@app.route("/scenes")
-def scenes():
-  scenes = backapi.ApiObject(config, "scenes")
-  return render_template('scenes.tpl', scenes=scenes.get())
+@app.route("/add/group", methods=['POST'])
+def addGroupPost():
+   data = request.form
 
-@app.route("/lights")
-def lights():
-  lights = backapi.ApiObject(config, "lights")
-  return render_template('lights.tpl', lights = lights.get())
+   query = { "lights": data.getlist('lights'),
+             "name": data['name'],
+             "type": data['type']}
+
+   if query['type'] in [ 'Living room', 'Kitchen', 'Dining', 'Bedroom', 'Kids bedroom', 
+                         'Bathroom', 'Nursery', 'Recreation', 'Office', 'Gym', 'Hallway', 
+                         'Toilet', 'Front door', 'Garage', 'Terrace', 'Garden', 
+                         'Driveway', 'Carport', 'Other']:
+     query['class'] = query['type']
+     query['type'] = "Room"
+
+   result = restApi.post("groups", query)
+
+   if "success" in result[0]:
+     if data['return'] == "groupPage":
+       return redirect( url_for("group", id = result[0]["success"]["id"]) )
+     if data['return'] == "newGroup":
+       return redirect( url_for("addGroup") )
+
+   return json.dumps(query)
 
 @app.route("/light/<id>")
 def light(id):
-  light = backapi.ApiObject(config, "lights/"+id)
-  return render_template('light.tpl', light=light.get(), id=id)
+  light = restApi.get("lights/"+id)
+  return render_template('light.tpl', light=light, id=id)
 
-@app.route("/sensors")
-def sensors():
-  sensors = backapi.ApiObject(config, "sensors")
-  return render_template('sensors.tpl', sensors = sensors.get())
-
-@app.route("/rules")
-def rules():
-  rules = backapi.ApiObject(config, "rules")
-  return render_template('rules.tpl', rules=rules.get())
+@app.route("/group/<id>")
+def group(id):
+  group = restApi.get("groups/"+id)
+  return render_template('group.tpl', group=group, id=id)
 
 @app.route("/rule/<id>")
 def rule(id):
-  rule = backapi.ApiObject(config, "rules/"+id)
-  return render_template('rule.tpl', id=id, rule=rule.get())
+  rule = restApi.get("rules/"+id)
+  return render_template('rule.tpl', id=id, rule=rule)
 
 @app.route("/redirect/", methods=['GET'])
 @app.route("/redirect/<path:url>", methods=['GET', 'DELETE'])
 def proxy(url=""):
     if not config.get("redirect", False):
        abort(404)
-    obj = backapi.ApiObject(config, url)
-    return json.dumps( obj.get() if request.method == 'GET' else obj.delete() )
+    return json.dumps(restApi.get(url) if request.method == 'GET' else restApi.delete(url))
     
 @app.route("/redirect/<path:url>", methods=['POST', 'PUT'])
 def proxyPostPut(url=""):
     if not config.get("redirect", False):
        abort(404)
     body =  request.get_json(force=True) 
-    obj = backapi.ApiObject(config, url)
-    return json.dumps( obj.post(body) if request.method == 'POST' else obj.put(body) )
+    return json.dumps( restApi.post(url,body) if request.method == 'POST' else restApi.put(url,body))
 
 @app.route("/api/", methods=['GET'])
 @app.route("/api/<user>", methods=['GET'])
 @app.route("/api/<user>/", methods=['GET'])
 @app.route("/api/<user>/<path:url>", methods=['GET', 'DELETE'])
 def Apiproxy(user="", url=""):
-    if not config.get("redirect", False):
+    if not config.get("proxy", False):
        abort(404)
-    obj = backapi.ProxyApiObject(config, user, url)
-    return json.dumps( obj.get() if request.method == 'GET' else obj.delete() )
+    proxyApi = backapi.restApi(config['hue-ip'], user)
+    result = {}
+    
+    if request.method == 'GET' :
+      result = proxyApi.get( url )
+      if type(result) is dict:
+        if url == "/" or url == "":
+          result['config']['name'] = "Proxy " + result['config']['name']
+          result['config']['ipaddress'] = config.get("ip", "192.168.0.235")
+        if url == "config" or url == "config/":
+          result['name'] = "Proxy " + result['name']
+          result['ipaddress'] = config.get("ip", "192.168.0.235")
+    else:
+      result = proxyApi.delete( url )
+
+    return json.dumps( result )
     
 @app.route("/api", methods=['POST'])
 @app.route("/api/", methods=['POST'])
@@ -93,14 +115,16 @@ def Apiproxy(user="", url=""):
 @app.route("/api/<user>/", methods=['POST', 'PUT'])
 @app.route("/api/<user>/<path:url>", methods=['POST', 'PUT'])
 def ApiProxyPostPut(user="", url=""):
-    if not config.get("redirect", False):
+    if not config.get("proxy", False):
        abort(404)
+    proxyApi = backapi.restApi(config['hue-ip'], user)
     body =  request.get_json(force=True) 
-    obj = backapi.ProxyApiObject(config, user,  url)
-    return json.dumps( obj.post(body) if request.method == 'POST' else obj.put(body) )
+    return json.dumps( proxyApi.post(url,body) if request.method == 'POST' else proxyApi.put(url, body) )
 
 if __name__ == '__main__':
   config = json.load(open('config.json'))
+  restApi = backapi.restApi(config['hue-ip'], config['user'])
+
   app.run(host=config.get("ip", "0.0.0.0"), port=config.get("port", 8080))
 
 

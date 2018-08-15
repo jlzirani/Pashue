@@ -10,9 +10,11 @@ if __name__ == '__main__':
 
   raw_input("Please, tap on the sync boutton of the hue bridge.")
 
-  answer = backapi.ApiObject( config, "" ).post(device) 
+  restApi = backapi.restApi(config['hue-ip'], "")
+  answer = restApi.post("", device) 
   if 'error' in answer[0]:
-    "Error, please restart the setup"
+    print( "Error recieved: " + answer[0]['error']['description'] )
+    print( "Please restart the setup" )
   elif 'success' in answer[0]:
     config['user'] = answer[0]['success']['username']
     json.dump(config, open("config.json", 'w')) 

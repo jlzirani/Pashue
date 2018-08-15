@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for id, scene in scenes.items() %}
+      {% for id, scene in result.items() %}
       <tr>
 	<th>{{ scene['type'] }} </th>
         <th>{{ scene['name'] }} </th>
