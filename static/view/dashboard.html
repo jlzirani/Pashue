@@ -13,12 +13,12 @@
     <div class="col border rounded">
       <h3 class="text-center"> Lights summary </h3>
        <table class="table table-sm">
-        <tr><th> Total </th><th> {{ lights.length }}</th></tr>
+        <tr><th> Total </th><th> {{ lights|objLength }}</th></tr>
         <tr><th> Number on </th><th> 
-          {{ lights.on }}
+          {{ lights | getStateLamp:"on" | objLength  }}
         </th></tr>
         <tr><th> Number reachable </th><th> 
-          {{ lights.reachable}}
+          {{ lights | getStateLamp:"reachable" | objLength  }}
         </th></tr>
       </table>
 

@@ -1,7 +1,7 @@
 
 function length( obj ) 
 {
-	return Object.keys( obj ).length
+	return (obj === null || obj === undefined) ? 0 : Object.keys( obj ).length
 }
 
 function filterDict( dict, testFn )
@@ -50,17 +50,7 @@ var pashueModule = angular.module('pashue', ["ngRoute"])
 			});
 		$http.get(link+'lights')
 			.then(function(response) {
-				$scope.lights = {
-					length: length(response.data),
-					on: length( filterDict(response.data, 
-						function( key, value) {
-							return value.state.on; 
-						})),
-					reachable: length( filterDict(response.data, 
-						function( key, value) {
-							return value.state.reachable;
-						}))
-				}
+				$scope.lights = response.data;
 			});
 	})
 	.config(function($routeProvider) {
@@ -115,7 +105,6 @@ pashueModule.controller('lights', function($scope, $rootScope, $http, $log) {
 		$rootScope.$active = "lights";
 				
 		$scope.setBri = function() {
-			console.log("test");
 			$http.put(link+"/state", JSON.stringify({"bri": parseInt($scope.light.state.bri)}))
 				.then(function(response) {});
 			
