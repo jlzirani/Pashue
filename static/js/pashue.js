@@ -14,61 +14,30 @@ function filterDict( dict, testFn )
 	return value;
 }
 
+function iterApply(dict, fn )
+{
+	for( var key in dict ) {
+		fn(dict[key]);
+	}	
+}
 
-
-angular.module('pashue', ["ngRoute"])
+var pashueModule = angular.module('pashue', ["ngRoute"])
+	.filter('getStateLamp', function() {
+		return function(obj,tgt) {
+			return filterDict(obj, function( _k, val ) {
+				return val.state[tgt];
+			})
+		}
+	})
+	.filter('objLength', function() {
+		return length;
+	})
 	.controller('pashue', function($scope, $rootScope, $route, $routeParams, $location) {
 		$rootScope.$menu = [ { 	name: "dashboard",
 							icon: "fas fa-home" },
 						 { 	name: "lights",
-							icon: "fas fa-lightbulb" },
-						 { 	name: "groups",
-							icon: "fas fa-lightbulb" } ];
+							icon: "fas fa-lightbulb" }];
 		$rootScope.$active = 0;
-	})
-	.controller('groups', function($scope, $rootScope, $http) {
-		var link = 'http://'+hue.ip+'/api/'+hue.user+'/';
-		$rootScope.$active = "groups";
-		$scope.data = {};
-		
-		$http.get(link+'lights')
-			.then(function(response) {
-				$scope.lights = response.data;
-				$scope.info = {
-					length: length(response.data),
-					on: length( filterDict(response.data, 
-						function( key, value) {
-							return value.state.on; 
-						})),
-					reachable: length( filterDict(response.data, 
-						function( key, value) {
-							return value.state.reachable;
-						}))
-				}
-			});
-	})
-	.controller('lights', function($scope, $rootScope, $http) {
-		var link = 'http://'+hue.ip+'/api/'+hue.user+'/'; 
-
-		$rootScope.$active = "lights";
-		$scope.data = {};
-		
-		
-		$http.get(link+'lights')
-			.then(function(response) {
-				$scope.lights = response.data;
-				$scope.info = {
-					length: length(response.data),
-					on: length( filterDict(response.data, 
-						function( key, value) {
-							return value.state.on; 
-						})),
-					reachable: length( filterDict(response.data, 
-						function( key, value) {
-							return value.state.reachable;
-						}))
-				}
-			});
 	})
 	.controller('dashboard', function($scope,$rootScope, $http) {
 		var link = 'http://'+hue.ip+'/api/'+hue.user+'/'; 
@@ -108,10 +77,52 @@ angular.module('pashue', ["ngRoute"])
 				templateUrl: "/static/view/lights.html",
 				controller: "lights"
 			})
-			.when("/groups", {
-				templateUrl: "/static/view/lights.html",
-				controller: "groups"
+			.when("/light/:id", {
+				templateUrl: "/static/view/light.html",
+				controller: "light"
 			})
-
 	});
+	
+// Lights
+pashueModule.controller('lights', function($scope, $rootScope, $http, $log) {
+		var link = 'http://'+hue.ip+'/api/'+hue.user+'/lights'; 
+		$rootScope.$active = "lights";
+	
+		$scope.setFn = function(id, action) {
+			$http.put(link+"/"+id+"/state", JSON.stringify({"on": action}))
+				.then(function(response) {});
+		};
+		
+		$scope.setAllFn = function(action) {
+			$http.put('http://'+hue.ip+'/api/'+hue.user+'/groups/0/action',
+						{"on": action } )
+				.then(function(response) {
+						iterApply($scope.lights, function( val ) {
+							val.state.on = action;
+						})
+				})
+		}
+			
+		$http.get(link)
+			.then(function(response) {
+				$scope.lights = response.data;
+			});
+			
+	})
+	.controller('light', function($scope, $rootScope, $http, $routeParams) {
+		var link = 'http://'+hue.ip+'/api/'+hue.user+'/lights/'+$routeParams.id; 
 
+		$rootScope.$active = "lights";
+				
+		$scope.setBri = function() {
+			console.log("test");
+			$http.put(link+"/state", JSON.stringify({"bri": parseInt($scope.light.state.bri)}))
+				.then(function(response) {});
+			
+		}
+				
+		$http.get(link)
+			.then(function(response) {
+				$scope.light = response.data;
+			});
+	});
