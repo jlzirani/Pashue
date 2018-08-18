@@ -40,7 +40,7 @@ var pashueModule = angular.module('pashue', ["ngRoute"])
 		$rootScope.$active = 0;
 	})
 	.controller('dashboard', function($scope,$rootScope, $http) {
-		var link = 'http://'+hue.ip+'/api/'+hue.user+'/'; 
+		var link = 'http://'+config.ip+'/api/'+config.user+'/'; 
 		
 		$rootScope.$active = "dashboard";
 						
@@ -72,10 +72,10 @@ var pashueModule = angular.module('pashue', ["ngRoute"])
 				controller: "light"
 			})
 	});
-	
+
 // Lights
 pashueModule.controller('lights', function($scope, $rootScope, $http, $log) {
-		var link = 'http://'+hue.ip+'/api/'+hue.user+'/lights'; 
+		var link = 'http://'+config.ip+'/api/'+config.user+'/lights'; 
 		$rootScope.$active = "lights";
 	
 		$scope.setFn = function(id, action) {
@@ -84,7 +84,7 @@ pashueModule.controller('lights', function($scope, $rootScope, $http, $log) {
 		};
 		
 		$scope.setAllFn = function(action) {
-			$http.put('http://'+hue.ip+'/api/'+hue.user+'/groups/0/action',
+			$http.put('http://'+config.ip+'/api/'+config.user+'/groups/0/action',
 						{"on": action } )
 				.then(function(response) {
 						iterApply($scope.lights, function( val ) {
@@ -100,7 +100,7 @@ pashueModule.controller('lights', function($scope, $rootScope, $http, $log) {
 			
 	})
 	.controller('light', function($scope, $rootScope, $http, $routeParams) {
-		var link = 'http://'+hue.ip+'/api/'+hue.user+'/lights/'+$routeParams.id; 
+		var link = 'http://'+config.ip+'/api/'+config.user+'/lights/'+$routeParams.id; 
 
 		$rootScope.$active = "lights";
 				

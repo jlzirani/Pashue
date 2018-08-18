@@ -21,6 +21,11 @@ def dashboard():
 #  return render_template('dashboard.tpl', conf=conf, 
 #                         lights=lights)
 
+@app.route("/config.js")
+def configJs():
+  return "var config = {{ ip: \"{}\", user: \"{}\", static: {} }};".format(
+    config['hue-ip'], config['user'], url_for('static', filename=""))
+  
 @app.route("/<any(groups, schedules, scenes, lights, sensors, rules):page>")
 def generic(page):
   result = restApi.get(page) 
